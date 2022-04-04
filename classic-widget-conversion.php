@@ -20,6 +20,30 @@ Class Classic_Widget extends WP_Widget {
 			__( 'Classic Widget', 'classic-widget' ), // Name
 			$widget_ops // Args
 		);
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+	}
+
+	/**
+	 * Load up the admin JS scripts.
+	 *
+	 * Scripts required for the creation of a block that allows for the widget title to show in the
+	 * widget list of the block-based sidebar editor.
+	 */
+	function admin_enqueue_scripts() {
+
+		// Only act on the widgets screen.
+		$screen = get_current_screen();
+		if ( 'widgets' !== $screen->id ) {
+			return;
+		}
+
+		// Enqueue the script.
+		wp_enqueue_script(
+			'heavy-custom-html-block',
+			plugin_dir_url( __FILE__ ) . 'build/index.js',
+			array( 'wp-blocks', 'wp-i18n', 'wp-editor' )
+		);
 	}
 
 	/**
